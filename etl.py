@@ -1,5 +1,10 @@
 import logging
+import os
 
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
+
+load_dotenv()
 import pandas as pd
 
 logging.basicConfig(
@@ -75,8 +80,21 @@ def transform(df: pd.DataFrame) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
+def load(df: pd.DataFrame, engine) -> None:
+    """Replace the content of superstore_orders with the cleaned data."""
+    with engine.begin() as conn:
+        conn.execute(text("TRUNCATE TABLE orders"))
+        df.to_sql("orders", conn, if_exists="append", index=False)
+
 
 if __name__ == "__main__":
+    
+    engine = create_engine(os.environ["DATABASE_URL"])
+
+    # Create the table if needed
+    # with open("init.sql") as f, engine.begin() as conn:
+    #     conn.execute(text(f.read()))
+        
     logger.info("Extracting data...")
     df = extract(url)
     logger.info(f"Number of rows: {df.shape[0]}")
@@ -84,10 +102,15 @@ if __name__ == "__main__":
     # logger.info(f"Columns: \n {df.columns.to_list()}")
     # logger.info(f"Types: \n {df.dtypes}")
     # logger.info(f"Null values: {df.isna().sum()}")
+    
+    
     logger.info("Transforming data...")
     df = transform(df)
     logger.info(f"Number of rows after transformation step: {df.shape[0]}")
     
+    
+    load(df, engine)
+    print(f"Loaded {len(df)} rows")
 
 
 
