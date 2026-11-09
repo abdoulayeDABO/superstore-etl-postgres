@@ -1,11 +1,5 @@
 -- init.sql
-CREATE DATABASE superstore;
-
-\c superstore
-
-DROP TABLE IF EXISTS orders;
-
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
     row_id         INTEGER PRIMARY KEY,
     order_id       VARCHAR(20)    NOT NULL,
     order_date     DATE           NOT NULL,
@@ -29,7 +23,7 @@ CREATE TABLE orders (
     profit         NUMERIC(12, 4)
 );
 
-CREATE INDEX idx_orders_order_id    ON orders (order_id);
-CREATE INDEX idx_orders_order_date  ON orders (order_date);
-CREATE INDEX idx_orders_customer_id ON orders (customer_id);
-CREATE INDEX idx_orders_product_id  ON orders (product_id);
+CREATE INDEX IF NOT EXISTS idx_orders_order_id    ON orders (order_id);
+CREATE INDEX IF NOT EXISTS idx_orders_order_date  ON orders (order_date);
+CREATE INDEX IF NOT EXISTS idx_orders_customer_id ON orders (customer_id);
+CREATE INDEX IF NOT EXISTS idx_orders_product_id  ON orders (product_id);
