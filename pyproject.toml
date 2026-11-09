@@ -7,6 +7,7 @@ requires-python = ">=3.14"
 dependencies = [
     "dotenv>=0.9.9",
     "pandas>=3.1.1",
+    "plotly>=7.1.0",
     "psycopg2-binary>=2.9.13",
     "psycopg[binary]>=3.3.8",
     "sqlalchemy>=2.1.8",
